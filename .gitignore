@@ -1,0 +1,68 @@
+# ─── Maven build output ────────────────────────────────────────────────────────
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ─── IDE ───────────────────────────────────────────────────────────────────────
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# VS Code (keep workspace settings, ignore local/user-specific)
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/*.code-workspace
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ─── OS artefacts ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Application runtime data ─────────────────────────────────────────────────
+# Local SQLite DB and undo journal (created at ~/.media-renamer/ by default,
+# but guard against any local copy being committed accidentally)
+*.db
+*.db-shm
+*.db-wal
+undo-journal.ndjson
+
+# ─── Secrets / credentials ────────────────────────────────────────────────────
+# API keys must never be committed
+.env
+.env.*
+!.env.example
+*.key
+secrets.properties
+application-local.properties
+
+# ─── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Test / coverage reports ──────────────────────────────────────────────────
+surefire-reports/
+jacoco.exec
+coverage/
