@@ -158,12 +158,16 @@ public class MediaRenamerCLI implements Runnable {
                 description = "Disable external API enrichment.")
         boolean noEnrich;
 
+        @Option(names = "--plex",
+                description = "Use Plex Media Server compatible naming (e.g. 'Movie Title (2014)', 'Show - S01E02 - Title').")
+        boolean plexMode;
+
         @Override
         public Integer call() {
             ScanResult scan = runScan(root, depth, false, false);
             if (scan == null) return 2;
 
-            RenameOptions options = buildRenameOptions(strategy, !noEnrich, true);
+            RenameOptions options = buildRenameOptions(strategy, !noEnrich, true, plexMode);
             SmartRenameEngine engine = new SmartRenameEngine();
             List<RenameProposal> proposals = engine.propose(scan.files(), options);
 
@@ -220,6 +224,10 @@ public class MediaRenamerCLI implements Runnable {
                 description = "Disable external API enrichment.")
         boolean noEnrich;
 
+        @Option(names = "--plex",
+                description = "Use Plex Media Server compatible naming (e.g. 'Movie Title (2014)', 'Show - S01E02 - Title').")
+        boolean plexMode;
+
         @Option(names = {"--yes", "-y"},
                 description = "Skip confirmation prompt and proceed immediately.")
         boolean skipConfirm;
@@ -229,7 +237,7 @@ public class MediaRenamerCLI implements Runnable {
             ScanResult scan = runScan(root, depth, false, false);
             if (scan == null) return 2;
 
-            RenameOptions options = buildRenameOptions(strategy, !noEnrich, false)
+            RenameOptions options = buildRenameOptions(strategy, !noEnrich, false, plexMode)
                     .withCollisionPolicy(collision);
             SmartRenameEngine engine = new SmartRenameEngine();
             List<RenameProposal> proposals = engine.propose(scan.files(), options);
@@ -351,13 +359,13 @@ public class MediaRenamerCLI implements Runnable {
         }
     }
 
-    static RenameOptions buildRenameOptions(String strategyId, boolean enrich, boolean dryRun) {
+    static RenameOptions buildRenameOptions(String strategyId, boolean enrich, boolean dryRun, boolean plexMode) {
         RenameOptions base = RenameOptions.defaults();
         if (strategyId != null && !strategyId.isBlank()) {
             base = base.withStrategy(strategyId);
         }
-        // Rebuild with correct enrich/dryRun flags
-        return new RenameOptions(base.strategyId(), base.collisionPolicy(), enrich, dryRun);
+        // Rebuild with correct enrich/dryRun/plexMode flags
+        return new RenameOptions(base.strategyId(), base.collisionPolicy(), enrich, dryRun, plexMode);
     }
 
     // ═══════════════════════════════════════════════════════════════════════

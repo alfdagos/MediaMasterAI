@@ -9,6 +9,7 @@ import it.alf.mediarenamer.metadata.VideoMetadataExtractor;
 import it.alf.mediarenamer.model.MediaFile;
 import it.alf.mediarenamer.model.MediaMetadata;
 import it.alf.mediarenamer.model.MediaType;
+import it.alf.mediarenamer.series.SeriesParser;
 import it.alf.mediarenamer.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +124,9 @@ public class SmartRenameEngine {
         }
 
         // ── 3. Select strategy and generate stem ─────────────────────────
-        Optional<String> stem = generateStem(file, rawMetadata, enriched, options);
+        Optional<String> stem = options.plexMode()
+                ? generatePlexStem(file, rawMetadata, enriched)
+                : generateStem(file, rawMetadata, enriched, options);
         if (stem.isEmpty()) {
             log.debug("No strategy produced a stem for: {}", file.path());
             return RenameProposal.skipped(file, "no applicable rename strategy");
@@ -182,8 +185,8 @@ public class SmartRenameEngine {
                                       EnrichedMetadata enriched, RenameOptions options) {
         return options.strategyId().orElse(switch (file.type()) {
             case IMAGE -> "DATE_LOCATION";
-            case VIDEO -> "MOVIE_TITLE_YEAR";
-            case AUDIO -> "ARTIST_TRACK";
+            case VIDEO -> options.plexMode() ? "PLEX_VIDEO" : "MOVIE_TITLE_YEAR";
+            case AUDIO -> options.plexMode() ? "PLEX_AUDIO" : "ARTIST_TRACK";
         });
     }
 
@@ -203,6 +206,77 @@ public class SmartRenameEngine {
             case MediaMetadata.AudioMetadata aud -> EnrichedMetadata.fromAudio(aud);
             case MediaMetadata.VideoMetadata vid -> EnrichedMetadata.fromVideo(vid);
         };
+    }
+
+    // ── Plex stem generation ───────────────────────────────────────────────
+
+    /**
+     * Generates a Plex-compatible filename stem for the given file.
+     *
+     * <p>Plex conventions:</p>
+     * <ul>
+     *   <li>Movies: {@code Movie Title (2014)}</li>
+     *   <li>TV episodes: {@code Show Name - S01E02 - Episode Title}</li>
+     *   <li>Music: {@code NN - Track Title} (artist/album handled by folder structure)</li>
+     *   <li>Images: unchanged from standard naming</li>
+     * </ul>
+     */
+    private Optional<String> generatePlexStem(MediaFile file, MediaMetadata raw, EnrichedMetadata enriched) {
+        return switch (file.type()) {
+            case IMAGE -> generateStem(file, raw, enriched,
+                    new RenameOptions(Optional.empty(), RenameOptions.CollisionPolicy.SKIP, false, true, false));
+            case VIDEO -> generatePlexVideoStem(file, enriched);
+            case AUDIO -> generatePlexAudioStem(raw, enriched);
+        };
+    }
+
+    private Optional<String> generatePlexVideoStem(MediaFile file, EnrichedMetadata enriched) {
+        // Try TV series detection first (SnnEnn / NxNN patterns)
+        SeriesParser parser = new SeriesParser();
+        Optional<SeriesParser.SeriesInfo> seriesInfo = parser.parse(file.filename());
+        if (seriesInfo.isPresent()) {
+            SeriesParser.SeriesInfo info = seriesInfo.get();
+            String showName = enriched.canonicalTitle()
+                    .orElse(info.showName().replace('_', ' '));
+            String code = String.format("S%02dE%02d", info.season(), info.episode());
+            Optional<String> episodeTitle = enriched.additionalFields().containsKey("episodeTitle")
+                    ? Optional.of(enriched.additionalFields().get("episodeTitle"))
+                    : info.episodeTitle();
+            String stem = episodeTitle.isPresent()
+                    ? showName + " - " + code + " - " + episodeTitle.get()
+                    : showName + " - " + code;
+            return Optional.of(stem);
+        }
+        // Movie: "Movie Title (2014)"
+        return enriched.canonicalTitle().map(title ->
+                enriched.releaseYear()
+                        .map(year -> title + " (" + year + ")")
+                        .orElse(title));
+    }
+
+    private Optional<String> generatePlexAudioStem(MediaMetadata raw, EnrichedMetadata enriched) {
+        // Plex music: "NN - Track Title" (artist & album resolved from folder structure by Plex)
+        Optional<String> title = enriched.canonicalTitle();
+        if (title.isEmpty()) return Optional.empty();
+
+        Optional<Integer> trackNo = Optional.empty();
+        if (raw instanceof MediaMetadata.AudioMetadata audMeta) {
+            trackNo = audMeta.trackNumber();
+        }
+        if (trackNo.isEmpty()) {
+            String rawStr = enriched.additionalFields().get("trackNumber");
+            if (rawStr != null) {
+                try {
+                    String stripped = rawStr.contains("/")
+                            ? rawStr.substring(0, rawStr.indexOf('/')) : rawStr;
+                    trackNo = Optional.of(Integer.parseInt(stripped.strip()));
+                } catch (NumberFormatException ignored) { }
+            }
+        }
+        final Optional<Integer> finalTrackNo = trackNo;
+        return Optional.of(finalTrackNo
+                .map(n -> String.format("%02d - %s", n, title.get()))
+                .orElse(title.get()));
     }
 
     // ── Proposal execution ─────────────────────────────────────────────────

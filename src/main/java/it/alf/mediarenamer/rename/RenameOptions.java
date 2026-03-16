@@ -11,36 +11,43 @@ import java.util.Optional;
  * @param collisionPolicy    what to do when the target path already exists
  * @param enrichmentEnabled  whether to call external APIs for metadata enrichment
  * @param dryRun             when {@code true} no filesystem writes are performed
+ * @param plexMode           when {@code true} filenames follow Plex Media Server conventions
  */
 public record RenameOptions(
         Optional<String> strategyId,
         CollisionPolicy  collisionPolicy,
         boolean          enrichmentEnabled,
-        boolean          dryRun) {
+        boolean          dryRun,
+        boolean          plexMode) {
 
     public RenameOptions {
         Objects.requireNonNull(strategyId,      "strategyId must not be null");
         Objects.requireNonNull(collisionPolicy, "collisionPolicy must not be null");
     }
 
-    /** Default options: auto strategy, SKIP collisions, enrichment enabled, live mode. */
+    /** Default options: auto strategy, SKIP collisions, enrichment enabled, live mode, standard naming. */
     public static RenameOptions defaults() {
-        return new RenameOptions(Optional.empty(), CollisionPolicy.SKIP, true, false);
+        return new RenameOptions(Optional.empty(), CollisionPolicy.SKIP, true, false, false);
     }
 
     /** Returns a copy with the given strategy ID forced. */
     public RenameOptions withStrategy(String id) {
-        return new RenameOptions(Optional.of(id), collisionPolicy, enrichmentEnabled, dryRun);
+        return new RenameOptions(Optional.of(id), collisionPolicy, enrichmentEnabled, dryRun, plexMode);
     }
 
     /** Returns a copy with the given collision policy. */
     public RenameOptions withCollisionPolicy(CollisionPolicy policy) {
-        return new RenameOptions(strategyId, policy, enrichmentEnabled, dryRun);
+        return new RenameOptions(strategyId, policy, enrichmentEnabled, dryRun, plexMode);
     }
 
     /** Returns a dry-run copy of these options. */
     public RenameOptions asDryRun() {
-        return new RenameOptions(strategyId, collisionPolicy, enrichmentEnabled, true);
+        return new RenameOptions(strategyId, collisionPolicy, enrichmentEnabled, true, plexMode);
+    }
+
+    /** Returns a copy with Plex Media Server compatible naming enabled or disabled. */
+    public RenameOptions withPlexMode(boolean plex) {
+        return new RenameOptions(strategyId, collisionPolicy, enrichmentEnabled, dryRun, plex);
     }
 
     // ── Nested enum ────────────────────────────────────────────────────────
