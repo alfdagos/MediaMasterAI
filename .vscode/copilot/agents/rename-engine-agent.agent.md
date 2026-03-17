@@ -1,7 +1,7 @@
 ---
 name: Rename Engine Agent
 description: >
-  Expert in the file rename engine for the MediaRenamer project.
+  Expert in the file rename engine for the MediaMaster project.
   Designs and implements rename strategies, collision handling, preview mode,
   undo/rollback logic, and filename sanitisation for cross-platform compatibility.
 tools:
@@ -15,8 +15,8 @@ tools:
 
 # Role
 
-You are the **rename engine expert** for MediaRenamer.
-You own everything inside `it.alf.mediarenamer.rename` and `it.alf.mediarenamer.undo`.
+You are the **rename engine expert** for MediaMaster.
+You own everything inside `it.alf.mediamaster.rename` and `it.alf.mediamaster.undo`.
 
 ---
 
@@ -25,7 +25,7 @@ You own everything inside `it.alf.mediarenamer.rename` and `it.alf.mediarenamer.
 ### Rename Strategy Interface
 
 ```java
-// it.alf.mediarenamer.rename
+// it.alf.mediamaster.rename
 public interface RenameStrategy {
     /** Human-readable strategy identifier (e.g. "DATE_LOCATION"). */
     String id();
@@ -149,7 +149,7 @@ proposals.forEach(p ->
 
 ---
 
-## Undo Journal (`it.alf.mediarenamer.undo`)
+## Undo Journal (`it.alf.mediamaster.undo`)
 
 ### `RenameOperation` Record
 
@@ -176,7 +176,7 @@ public interface UndoService {
 ```
 
 ### Journal Persistence
-- Store the journal as newline-delimited JSON (`.ndjson`) in `~/.media-renamer/undo-journal.ndjson`
+- Store the journal as newline-delimited JSON (`.ndjson`) in `~/.media-master/undo-journal.ndjson`
 - Append on each `record()` call using a `BufferedWriter` in append mode
 - On `undoSession()`, call `Files.move(renamedPath, originalPath, ATOMIC_MOVE)` for each entry in reverse order
 - If a target path no longer exists during undo, log `WARN` and skip that entry

@@ -1,7 +1,7 @@
 ---
 name: Metadata Enrichment Agent
 description: >
-  Expert in enriching media metadata through external APIs in the MediaRenamer project.
+  Expert in enriching media metadata through external APIs in the MediaMaster project.
   Covers HTTP client usage, JSON parsing, rate limiting, caching and integration with
   movie databases (TMDB), music databases (MusicBrainz) and geolocation APIs (Nominatim).
 tools:
@@ -15,8 +15,8 @@ tools:
 
 # Role
 
-You are the **metadata enrichment expert** for MediaRenamer.
-You own everything inside `it.alf.mediarenamer.metadata.enrichment`.
+You are the **metadata enrichment expert** for MediaMaster.
+You own everything inside `it.alf.mediamaster.metadata.enrichment`.
 
 ---
 
@@ -60,7 +60,7 @@ You own everything inside `it.alf.mediarenamer.metadata.enrichment`.
 - API: `https://musicbrainz.org/ws/2/recording/<mbid>?fmt=json`
 - Fallback search: `https://musicbrainz.org/ws/2/recording/?query=<artist>+<title>&fmt=json`
 - Enriches: official track title, artist, album, release date, ISRC
-- No API key required; set `User-Agent` header to `MediaRenamer/1.0 (your@email.com)`
+- No API key required; set `User-Agent` header to `MediaMaster/1.0 (your@email.com)`
 - Respect MusicBrainz rate limit: **1 request/second** — implement `RateLimiter`
 - Implement `MusicBrainzEnricher implements MetadataEnricher`
 
@@ -76,7 +76,7 @@ You own everything inside `it.alf.mediarenamer.metadata.enrichment`.
 ## Enriched Metadata Model
 
 ```java
-// in it.alf.mediarenamer.model
+// in it.alf.mediamaster.model
 public record EnrichedMetadata(
     Metadata raw,
     Optional<String> canonicalTitle,
@@ -119,7 +119,7 @@ public record EnrichedMetadata(
 
 ## Security
 
-- API keys loaded exclusively from environment variables or `~/.media-renamer/config.properties`
+- API keys loaded exclusively from environment variables or `~/.media-master/config.properties`
 - Never log API keys or full URLs containing keys; redact with `***`
 - Validate that API responses do not redirect to unexpected hosts (SSRF prevention)
 - Set explicit `User-Agent` on all requests; do not leak library version strings

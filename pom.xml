@@ -7,12 +7,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- ─── Coordinates ──────────────────────────────────────────────── -->
-    <groupId>it.alf.mediarenamer</groupId>
-    <artifactId>media-renamer-ai</artifactId>
+    <groupId>it.alf.mediamaster</groupId>
+    <artifactId>media-master-ai</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>MediaRenamer AI</name>
+    <name>MediaMaster AI</name>
     <description>
         A Java 21 CLI application that scans media directories, extracts and enriches
         metadata, and renames files intelligently using configurable strategies.
@@ -212,10 +212,10 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>it.alf.mediarenamer.cli.MediaRenamerCLI</mainClass>
+                            <mainClass>it.alf.mediamaster.cli.MediaMasterCLI</mainClass>
                         </manifest>
                     </archive>
-                    <finalName>media-renamer</finalName>
+                    <finalName>media-master</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
@@ -237,7 +237,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>it.alf.mediarenamer.cli.MediaRenamerCLI</mainClass>
+                            <mainClass>it.alf.mediamaster.cli.MediaMasterCLI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

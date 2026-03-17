@@ -1,4 +1,4 @@
-# MediaRenamer — Architecture Documentation
+# MediaMaster — Architecture Documentation
 
 > Version 2.0 — Updated after Phase 3 feature additions
 
@@ -6,7 +6,7 @@
 
 ## Table of Contents
 
-- [MediaRenamer — Architecture Documentation](#mediarenamer--architecture-documentation)
+- [MediaMaster — Architecture Documentation](#mediamaster--architecture-documentation)
   - [Table of Contents](#table-of-contents)
   - [1. Overview](#1-overview)
   - [2. Package Structure](#2-package-structure)
@@ -34,7 +34,7 @@
 
 ## 1. Overview
 
-MediaRenamer is a Java 21 CLI application that renames media files (images, videos, audio)
+MediaMaster is a Java 21 CLI application that renames media files (images, videos, audio)
 intelligently by combining:
 
 - **Local metadata extraction** — EXIF from images, ID3 tags from audio, container metadata from video.
@@ -50,9 +50,9 @@ intelligently by combining:
 ## 2. Package Structure
 
 ```
-it.alf.mediarenamer
+it.alf.mediamaster
 ├── cli/              # Picocli CLI entry point (subcommands)
-│   ├── MediaRenamerCLI.java        # Root command + all subcommands
+│   ├── MediaMasterCLI.java        # Root command + all subcommands
 │   └── ConsoleOutput.java          # ANSI-aware console helpers
 │
 ├── scanner/          # Filesystem scanning
@@ -157,7 +157,7 @@ it.alf.mediarenamer
 
 ### 4.1 CLI Layer
 
-`MediaRenamerCLI` is the Picocli root command with six subcommands:
+`MediaMasterCLI` is the Picocli root command with six subcommands:
 
 | Subcommand      | Purpose                                                         |
 |-----------------|-----------------------------------------------------------------|
@@ -263,7 +263,7 @@ DateOnlyStrategy       (any    → YYYY-MM-DD fallback)
 
 ### 4.9 Cache Subsystem
 
-`DatabaseManager` manages the SQLite database at `~/.media-renamer/media-renamer.db`.
+`DatabaseManager` manages the SQLite database at `~/.media-master/media-master.db`.
 WAL mode and foreign key enforcement are enabled on every connection via `PRAGMA` statements.
 The schema is applied automatically from the embedded `schema.sql` classpath resource.
 
@@ -287,7 +287,7 @@ with an `undone_at` timestamp. Filesystem moves use `StandardCopyOption.ATOMIC_M
 
 ### 4.11 Undo Journal
 
-`UndoJournal` provides a lightweight NDJSON log at `~/.media-renamer/undo-journal.ndjson`
+`UndoJournal` provides a lightweight NDJSON log at `~/.media-master/undo-journal.ndjson`
 as a complementary undo path that works without a running database. Used directly by
 `SmartRenameEngine` and the `undo` CLI command.
 
@@ -361,9 +361,9 @@ Files.move (ATOMIC_MOVE or copy+delete fallback)
 |----------------------|----------|--------------------------------------|
 | `TMDB_API_KEY`       | No       | Enables movie and TV series enrichment |
 
-Database path: `~/.media-renamer/media-renamer.db` (auto-created by `DatabaseManager`).
-Undo journal: `~/.media-renamer/undo-journal.ndjson` (auto-created by `UndoJournal`).
-Log file: `~/.media-renamer/media-renamer.log` (rolling, Logback-managed).
+Database path: `~/.media-master/media-master.db` (auto-created by `DatabaseManager`).
+Undo journal: `~/.media-master/undo-journal.ndjson` (auto-created by `UndoJournal`).
+Log file: `~/.media-master/media-master.log` (rolling, Logback-managed).
 
 ---
 

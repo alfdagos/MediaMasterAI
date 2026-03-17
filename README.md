@@ -1,4 +1,4 @@
-# MediaRenamer AI
+# MediaMaster AI
 
 > A Java 21 CLI application that intelligently renames media files based on metadata and external databases.
 
@@ -12,7 +12,7 @@
 - **Smart rename strategies** — `DATE_LOCATION`, `MOVIE_TITLE_YEAR`, `ARTIST_TRACK`, `DATE_ONLY`
 - **Preview mode** — shows what _would_ be renamed without touching any file
 - **Safe rename** — uses atomic moves; collision handling (skip / suffix / overwrite)
-- **Undo** — every rename session is journalled to `~/.media-renamer/undo-journal.ndjson`; fully reversible
+- **Undo** — every rename session is journalled to `~/.media-master/undo-journal.ndjson`; fully reversible
 - **Duplicate detection** — identifies duplicate files by SHA-256 content hash
 
 ---
@@ -34,28 +34,28 @@
 mvn clean package -q
 ```
 
-This produces `target/media-renamer.jar` (fat-jar with all dependencies).
+This produces `target/media-master.jar` (fat-jar with all dependencies).
 
 ### Run
 
 ```bash
 # Scan a directory and report all media files found
-java -jar target/media-renamer.jar scan /path/to/photos
+java -jar target/media-master.jar scan /path/to/photos
 
 # Preview renames (no files are changed)
-java -jar target/media-renamer.jar preview /path/to/photos
+java -jar target/media-master.jar preview /path/to/photos
 
 # Execute renames
-java -jar target/media-renamer.jar rename /path/to/photos
+java -jar target/media-master.jar rename /path/to/photos
 
 # Undo the last rename session
-java -jar target/media-renamer.jar undo
+java -jar target/media-master.jar undo
 ```
 
 ### Development run (without packaging)
 
 ```bash
-mvn compile exec:java -Dexec.mainClass=it.alf.mediarenamer.cli.MediaRenamerCLI \
+mvn compile exec:java -Dexec.mainClass=it.alf.mediamaster.cli.MediaMasterCLI \
     -Dexec.args="scan /path/to/photos"
 ```
 
@@ -68,7 +68,7 @@ mvn compile exec:java -Dexec.mainClass=it.alf.mediarenamer.cli.MediaRenamerCLI \
 Scans a directory recursively and reports media files found.
 
 ```
-media-renamer scan [OPTIONS] <directory>
+media-master scan [OPTIONS] <directory>
 
 Options:
   --depth <n>         Maximum directory depth (default: unlimited)
@@ -84,7 +84,7 @@ Options:
 Generates rename proposals and prints them without touching any file.
 
 ```
-media-renamer preview [OPTIONS] <directory>
+media-master preview [OPTIONS] <directory>
 
 Options:
   --strategy <id>     DATE_LOCATION | MOVIE_TITLE_YEAR | ARTIST_TRACK | DATE_ONLY (default: auto)
@@ -100,7 +100,7 @@ Options:
 Executes rename operations after optional confirmation.
 
 ```
-media-renamer rename [OPTIONS] <directory>
+media-master rename [OPTIONS] <directory>
 
 Options:
   --strategy <id>     Rename strategy (default: auto)
@@ -118,7 +118,7 @@ Options:
 Reverts the last rename session (or a specific session by ID).
 
 ```
-media-renamer undo [OPTIONS]
+media-master undo [OPTIONS]
 
 Options:
   --session <id>      Undo a specific session UUID (default: last session)
@@ -162,10 +162,10 @@ Spaces are preserved, parentheses used for year, episodes use ` - ` as separator
 
 ## Configuration
 
-MediaRenamer reads configuration from (highest priority first):
+MediaMaster reads configuration from (highest priority first):
 
 1. CLI flags
-2. `~/.media-renamer/config.properties`
+2. `~/.media-master/config.properties`
 3. Built-in defaults
 
 ### API Keys (environment variables)
@@ -180,11 +180,11 @@ export OPENCAGE_API_KEY=your_opencage_key  # Geolocation (optional; falls back t
 ## Project Structure
 
 ```
-media-renamer-ai/
+media-master-ai/
 ├── pom.xml
 ├── src/
 │   ├── main/
-│   │   ├── java/it/alf/mediarenamer/
+│   │   ├── java/it/alf/mediamaster/
 │   │   │   ├── cli/          # Picocli commands
 │   │   │   ├── scanner/      # Filesystem traversal
 │   │   │   ├── metadata/     # Metadata extractors
@@ -202,7 +202,7 @@ media-renamer-ai/
 │   │       ├── logback.xml
 │   │       └── schema.sql
 │   └── test/
-│       └── java/it/alf/mediarenamer/
+│       └── java/it/alf/mediamaster/
 └── docs/
     └── architecture.md
 ```

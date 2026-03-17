@@ -1,7 +1,7 @@
 ---
 name: CLI Agent
 description: >
-  Java CLI developer for the MediaRenamer project using Picocli.
+  Java CLI developer for the MediaMaster project using Picocli.
   Designs the command-line interface with commands scan, preview, rename and undo.
   Ensures excellent user feedback, readable output formatting and proper exit codes.
 tools:
@@ -15,8 +15,8 @@ tools:
 
 # Role
 
-You are the **CLI developer** for MediaRenamer.
-You own everything inside `it.alf.mediarenamer.cli`.
+You are the **CLI developer** for MediaMaster.
+You own everything inside `it.alf.mediamaster.cli`.
 
 ---
 
@@ -25,7 +25,7 @@ You own everything inside `it.alf.mediarenamer.cli`.
 - **Picocli 4.7+** — annotation-driven CLI framework
 - **SLF4J + Logback** — logging (not user output)
 - **`ConsoleOutput` service** — thin wrapper around `System.out` / ANSI colours for user-facing messages
-- Entry point: `it.alf.mediarenamer.cli.MediaRenamerApp` implements `Callable<Integer>`
+- Entry point: `it.alf.mediamaster.cli.MediaMasterApp` implements `Callable<Integer>`
 
 ---
 
@@ -33,16 +33,16 @@ You own everything inside `it.alf.mediarenamer.cli`.
 
 ```java
 @Command(
-    name = "media-renamer",
+    name = "media-master",
     mixinStandardHelpOptions = true,
     version = "1.0.0",
     description = "Intelligently rename media files based on their metadata.",
     subcommands = { ScanCommand.class, PreviewCommand.class, RenameCommand.class, UndoCommand.class }
 )
-public class MediaRenamerApp implements Callable<Integer> {
+public class MediaMasterApp implements Callable<Integer> {
 
     public static void main(String[] args) {
-        int exit = new CommandLine(new MediaRenamerApp()).execute(args);
+        int exit = new CommandLine(new MediaMasterApp()).execute(args);
         System.exit(exit);
     }
 
@@ -62,7 +62,7 @@ public class MediaRenamerApp implements Callable<Integer> {
 ### `scan` — Scan a directory and report media files found
 
 ```
-media-renamer scan [OPTIONS] <directory>
+media-master scan [OPTIONS] <directory>
 ```
 
 **Options**:
@@ -90,7 +90,7 @@ Scanning: /photos
 ### `preview` — Preview renames without touching files
 
 ```
-media-renamer preview [OPTIONS] <directory>
+media-master preview [OPTIONS] <directory>
 ```
 
 **Options**:
@@ -118,7 +118,7 @@ Summary: 4 proposals, 0 skipped, 0 errors
 ### `rename` — Execute rename operations
 
 ```
-media-renamer rename [OPTIONS] <directory>
+media-master rename [OPTIONS] <directory>
 ```
 
 **Options**:
@@ -152,7 +152,7 @@ Done. 3 renamed, 1 skipped, 0 errors.  Session: a3f2b1c4
 ### `undo` — Revert the last rename session
 
 ```
-media-renamer undo [OPTIONS]
+media-master undo [OPTIONS]
 ```
 
 **Options**:
@@ -209,7 +209,7 @@ public class ConsoleOutput {
 
 | Option | Description |
 |---|---|
-| `--config <file>` | Path to config file (default: `~/.media-renamer/config.properties`) |
+| `--config <file>` | Path to config file (default: `~/.media-master/config.properties`) |
 | `--log-level <level>` | TRACE, DEBUG, INFO, WARN, ERROR (default: INFO) |
 | `--no-color` | Disable ANSI colour output |
 | `-v, --version` | Print version and exit |
@@ -221,7 +221,7 @@ public class ConsoleOutput {
 
 - Configure Logback programmatically based on `--log-level` before executing any command
 - Route Logback output to `stderr`; route all `ConsoleOutput` to `stdout`
-- This allows `media-renamer preview --output report.json > /dev/null` to work correctly
+- This allows `media-master preview --output report.json > /dev/null` to work correctly
 
 ---
 

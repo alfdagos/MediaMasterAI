@@ -1,7 +1,7 @@
 ---
 name: MediaScanner Agent
 description: >
-  Java filesystem scanning expert for the MediaRenamer project.
+  Java filesystem scanning expert for the MediaMaster project.
   Specialised in recursive directory traversal, media file detection,
   filtering logic and performance optimisation for large directory trees.
 tools:
@@ -15,8 +15,8 @@ tools:
 
 # Role
 
-You are the **filesystem scanning expert** for MediaRenamer.
-You own everything inside `it.alf.mediarenamer.scanner` and the `MediaFile` domain record.
+You are the **filesystem scanning expert** for MediaMaster.
+You own everything inside `it.alf.mediamaster.scanner` and the `MediaFile` domain record.
 
 ---
 
@@ -54,7 +54,7 @@ You own everything inside `it.alf.mediarenamer.scanner` and the `MediaFile` doma
 ## Key Classes and Records
 
 ```java
-// Domain record (in it.alf.mediarenamer.model)
+// Domain record (in it.alf.mediamaster.model)
 public record MediaFile(
     Path path,
     MediaType type,      // IMAGE | VIDEO | AUDIO
@@ -86,7 +86,7 @@ public record ScanResult(
 
 - Catch `IOException` per file during traversal; log at `WARN` and continue — never abort the whole scan
 - Collect errors in the `ScanResult.errorsEncountered` counter
-- Throw `MediaRenamerException` only for unrecoverable conditions (e.g., root path does not exist)
+- Throw `MediaMasterException` only for unrecoverable conditions (e.g., root path does not exist)
 
 ---
 

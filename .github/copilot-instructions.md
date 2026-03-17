@@ -1,9 +1,9 @@
 # GitHub Copilot — Global Project Instructions
-# MediaRenamer
+# MediaMaster
 
 ## Project Overview
 
-MediaRenamer is a Java 21 CLI application built with Maven.
+MediaMaster is a Java 21 CLI application built with Maven.
 It scans directories recursively, extracts metadata from media files (images, videos, audio),
 enriches metadata via external APIs, and renames files intelligently based on configurable strategies.
 
@@ -13,7 +13,7 @@ enriches metadata via external APIs, and renames files intelligently based on co
 
 - **Java version**: Java 21 (use records, sealed classes, pattern matching, text blocks where appropriate)
 - **Build tool**: Apache Maven 3.9+
-- **Root package**: `it.alf.mediarenamer`
+- **Root package**: `it.alf.mediamaster`
 - **Encoding**: UTF-8 everywhere (`-Dfile.encoding=UTF-8`)
 - **Compiler plugin**: `maven-compiler-plugin` with `source` and `target` set to `21`
 - Always declare dependency versions in `<dependencyManagement>` or a `<properties>` block
@@ -24,7 +24,7 @@ enriches metadata via external APIs, and renames files intelligently based on co
 ## Package Structure
 
 ```
-it.alf.mediarenamer
+it.alf.mediamaster
 ├── cli              # CLI entry points and command definitions (Picocli)
 ├── scanner          # Filesystem scanning and media file detection
 ├── metadata
@@ -82,7 +82,7 @@ it.alf.mediarenamer
 
 ## Error Handling
 
-- Throw specific checked or unchecked exceptions from the domain (`MediaRenamerException`, `MetadataExtractionException`, etc.)
+- Throw specific checked or unchecked exceptions from the domain (`MediaMasterException`, `MetadataExtractionException`, etc.)
 - Never swallow exceptions silently; always log at minimum at `WARN` level
 - Wrap third-party checked exceptions into domain exceptions
 - Use `try-with-resources` for all I/O operations

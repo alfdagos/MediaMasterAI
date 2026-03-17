@@ -14,10 +14,10 @@
 
     <!-- ── Rolling file appender ───────────────────────────────────────────── -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${user.home}/.media-renamer/media-renamer.log</file>
+        <file>${user.home}/.media-master/media-master.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- Roll daily; keep 30 days; cap each file at 10 MB -->
-            <fileNamePattern>${user.home}/.media-renamer/media-renamer.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${user.home}/.media-master/media-master.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>200MB</totalSizeCap>

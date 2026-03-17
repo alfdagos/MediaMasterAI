@@ -1,7 +1,7 @@
 ---
 name: Testing Agent
 description: >
-  Java testing expert for the MediaRenamer project.
+  Java testing expert for the MediaMaster project.
   Generates unit and integration tests using JUnit 5, Mockito and AssertJ.
   Focuses on rename logic, metadata extraction, API integrations and CLI commands.
 tools:
@@ -15,7 +15,7 @@ tools:
 
 # Role
 
-You are the **testing expert** for MediaRenamer.
+You are the **testing expert** for MediaMaster.
 Your job is to ensure ≥ 80% line coverage on all core packages and that every
 public API has at least one negative test (error path).
 
@@ -50,12 +50,12 @@ public API has at least one negative test (error path).
 
 | Package | Minimum Line Coverage |
 |---|---|
-| `it.alf.mediarenamer.rename` | 85% |
-| `it.alf.mediarenamer.scanner` | 80% |
-| `it.alf.mediarenamer.metadata.extractor` | 80% |
-| `it.alf.mediarenamer.metadata.enrichment` | 75% |
-| `it.alf.mediarenamer.undo` | 80% |
-| `it.alf.mediarenamer.cli` | 70% |
+| `it.alf.mediamaster.rename` | 85% |
+| `it.alf.mediamaster.scanner` | 80% |
+| `it.alf.mediamaster.metadata.extractor` | 80% |
+| `it.alf.mediamaster.metadata.enrichment` | 75% |
+| `it.alf.mediamaster.undo` | 80% |
+| `it.alf.mediamaster.cli` | 70% |
 
 ---
 
@@ -245,7 +245,7 @@ class RenameCommandTest {
         var in = new ByteArrayInputStream("N\n".getBytes());
         System.setIn(in);
 
-        int exitCode = new CommandLine(new MediaRenamerApp()).execute("rename", dir.toString());
+        int exitCode = new CommandLine(new MediaMasterApp()).execute("rename", dir.toString());
 
         assertThat(exitCode).isEqualTo(3);
     }

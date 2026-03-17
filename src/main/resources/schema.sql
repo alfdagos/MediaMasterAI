@@ -1,4 +1,4 @@
--- MediaRenamer SQLite schema
+-- MediaMaster SQLite schema
 -- Applied automatically by DatabaseManager on first run.
 -- All tables use IF NOT EXISTS for idempotent initialisation.
 
